@@ -8,8 +8,6 @@ import java.util.List;
  * 获取路径下的全部文件
  */
 public class FileList {
-
-
     /**
      * 传入路径，返回该路径下的所有文件的路径
      *
