@@ -1,4 +1,4 @@
-package string;
+package utils.string;
 
 public class FullHalfChange {
 

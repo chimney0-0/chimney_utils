@@ -1,4 +1,4 @@
-package database;
+package utils.database;
 
 import com.google.common.base.Joiner;
 import org.apache.log4j.Logger;
