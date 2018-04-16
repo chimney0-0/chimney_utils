@@ -68,19 +68,19 @@ public class FileUtil {
 			if(bw != null){
 				try {
 					bw.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 					
 				}
 			}
 		}
 	}
 	
-	public static void WriteFile(String filePath, String writeInfo){
+	public static void WriteFile(String filePath, String writeInfo, boolean append){
 		BufferedWriter bw = null;
 		checkPath(filePath);
 		
 		try {
-			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(filePath), true),"UTF-8"));
+			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(filePath), append),"UTF-8"));
 			bw.write(writeInfo + "\r\n");
 			bw.flush();
 			
@@ -90,7 +90,7 @@ public class FileUtil {
 			if(bw != null){
 				try {
 					bw.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 					
 				}
 			}
@@ -107,7 +107,7 @@ public class FileUtil {
 			bw = new BufferedWriter(new FileWriter(file));
 			StringBuilder sb = new StringBuilder();
 			for(Entry<Integer, Integer> entry : infos.entrySet()){
-				sb.append(entry.getKey()+"|"+entry.getValue());
+				sb.append(entry.getKey()).append("|").append(entry.getValue());
 			}
 			bw.write(sb.toString() + "\r\n");
 			bw.flush();
@@ -127,10 +127,10 @@ public class FileUtil {
 	
 	/**
 	 * 检查路径是否存在，不存在则创建
-	 * @param path
+	 * @param path 路径
 	 */
-	public static void checkPath(String path){
-		File folder = new File(path.substring(0,path.lastIndexOf("\\")));
+	private static void checkPath(String path){
+		File folder = new File(path.substring(0,path.lastIndexOf("/")));
 		if(!folder.exists()){
 			try{
 			folder.mkdirs();
@@ -142,7 +142,7 @@ public class FileUtil {
 	
 	/**
 	 * 读取指定类型文件
-	 * @param folderPath
+	 * @param folderPath 文件夹路径
 	 * @param fileType 指定类型
 	 * @return
 	 */
@@ -154,15 +154,15 @@ public class FileUtil {
 			}
 		});
 		
-		List<File> filelist = new ArrayList<>();
-		for(String file : files){
+		List<File> fileList = new ArrayList<>();
+		for(String file : files != null ? files : new String[0]){
 			String filePath = folderPath + File.separator + file;
-			filelist.add(new File(filePath));
+			fileList.add(new File(filePath));
 		}
-		return filelist;
+		return fileList;
 	}
 	
-	public static List<File> getDirFiles(File dir){
+	private static List<File> getDirFiles(File dir){
 		List<File> files = new ArrayList<File>();
 		File[] dirs = dir.listFiles();
 		for(File file : dirs){
@@ -179,10 +179,12 @@ public class FileUtil {
 	public static void readFile(File file, List<String> allInfo){
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-			String str = null;
+//			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+			br = new BufferedReader(new InputStreamReader(FileUtil.class.getClassLoader().getResourceAsStream(file.getPath())));
+
+			String str;
 			while(((str = br.readLine()) != null)){
-				if(!str.equals("")){
+				if(!str.equals("") && !str.startsWith("#")){
 					allInfo.add(str);
 				}
 			}
@@ -192,17 +194,17 @@ public class FileUtil {
 			if(br != null){
 				try {
 					br.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 				}
 			}
 		}
 	}
 	public static String readFile(File file){
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(file));
-			String str = null;
+			String str;
 			while(((str = br.readLine()) != null)){
 				sb.append(str);
 			}
@@ -212,28 +214,7 @@ public class FileUtil {
 			if(br != null){
 				try {
 					br.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-		return sb.toString().trim();
-	}
-	public static String readFile(File file,String charset){
-		StringBuffer sb = new StringBuffer();
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
-			String str = null;
-			while(((str = br.readLine()) != null)){
-				sb.append(str);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally{
-			if(br != null){
-				try {
-					br.close();
-				} catch (IOException e) {
+				} catch (IOException ignored) {
 				}
 			}
 		}
@@ -242,8 +223,8 @@ public class FileUtil {
 	
 	/**
 	 * 将PDF下载到指定路径
-	 * @param pdfUrl
-	 * @param writeFile
+	 * @param pdfUrl url
+	 * @param writeFile 路径
 	 */
 	public static void getPdfInNet(String pdfUrl, String writeFile){
 		File folder = new File(writeFile.substring(0, writeFile.lastIndexOf("\\")));
@@ -280,7 +261,7 @@ public class FileUtil {
 			folder.mkdirs();
 		}
 		
-		InputStream is = null;
+		InputStream is;
 		HttpURLConnection urlcon = null;
 		ByteArrayOutputStream output = null;
 		try {
@@ -324,30 +305,43 @@ public class FileUtil {
 	}
 	/**
 	 * 获取配置文件（绝对路径）
-	 * @param proPath
-	 * @return
+	 * @param proPath 绝对路径
+	 * @return 配置
 	 */
 	public static Properties getProAbsolute(String proPath){
 		Properties pro = new Properties();
 		try {
 			pro.load(new BufferedReader(new InputStreamReader(new FileInputStream(proPath), "UTF-8")));
 		} catch (IOException e) {
-			System.out.println("Properties load erro!" + e.getMessage());
+			System.out.println("Properties load error!" + e.getMessage());
 		}
 		return pro;
 	}
 	/**
 	 * 获取配置文件（相对路径）
-	 * @param path
-	 * @return
+	 * @param path 相对路径
+	 * @return 配置
 	 */
 	public static Properties getProRelative(String path){
 		Properties pro = new Properties();
 		try {
-			pro.load(FileUtil.class.getClassLoader().getResourceAsStream(path));
-		} catch (IOException e) {
-			System.out.println("Properties load erro：" + e.getMessage());
+			pro.load(new InputStreamReader(FileUtil.class.getClassLoader().getResourceAsStream(path),"utf-8"));
+		} catch (Exception e) {
+			System.out.println("Properties load error：" + e.getMessage());
+			e.printStackTrace();
 		}
 		return pro;
 	}
+
+	public static Properties getOrderedProRelative(String path){
+	    Properties pro = new OrderedProperties();
+        try {
+            pro.load(new InputStreamReader(FileUtil.class.getClassLoader().getResourceAsStream(path),"utf-8"));
+        } catch (Exception e) {
+            System.out.println("Properties load error：" + e.getMessage());
+            e.printStackTrace();
+        }
+        return pro;
+    }
+
 }
