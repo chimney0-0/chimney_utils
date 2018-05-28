@@ -1,8 +1,13 @@
 package export;
 
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 import org.apache.log4j.Logger;
 import utils.database.JfinalConfig;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GroupMerge {
     private Logger logger = Logger.getLogger(GroupMerge.class);
@@ -183,6 +188,29 @@ public class GroupMerge {
     public void runSql(String sql){
         Db.update(sql);
         logger.info("执行完成："+sql);
+    }
+
+    public void process(){
+        int size = 10000;
+        int lastId = 0;
+        while (true) {
+            List<Record> recordList = Db.find("select * from `2006_result` where `id` > "+lastId+" limit " + size);
+            if (recordList.size() == 0) break;
+            logger.info("开始处理: " + (lastId+1) + "-" + (size + lastId));
+            lastId = recordList.get(recordList.size()-1).getInt("id"); //重新获取最大的id
+            recordList.parallelStream().forEach((Record f) -> {
+                //判断过滤条件
+                if(f.getStr("企业名称")!=null) return;
+                String nameOld = f.getStr("企业名称原");
+                String nameNew = nameOld.replace("\t","").trim();
+                if(nameOld.equals(nameNew)) return;
+                f.set("企业名称", nameNew);
+                Db.update("2006_result",f);
+                //logger.info(f.getInt("id")+": "+f.getStr("企业名称"));
+            });
+            logger.info("处理完成: " +(lastId+1-size) + "-" +  lastId);
+        }
+
     }
 
 }

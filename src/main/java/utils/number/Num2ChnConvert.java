@@ -1,28 +1,30 @@
 package utils.number;
 
-public class NumberConvert {
+/**
+ * 将阿拉伯数字转换为中文数字的方法类
+ * 支持：整数，小数
+ */
+public class Num2ChnConvert {
 
     static String[] units = {"", "十", "百", "千", "万", "十万", "百万", "千万", "亿",
             "十亿", "百亿", "千亿", "万亿"};
     static char[] numArray = {'零', '一', '二', '三', '四', '五', '六', '七', '八', '九'};
 
-
-    /**
-     * @param args
-     */
+    //测试
     public static void main(String[] args) {
-//        int num = 245000006;
-//        String numStr = foematInteger(num);
-//        print("num= " + num + ", convert result: " + numStr);
-//        double decimal = 245006.234206;
-//        print("============================================================");
-//        String decStr = formatDecimal(decimal);
-//        print("decimal= " + decimal + ", decStr: " + decStr);
+        int num = 245000006;
+        System.out.println(formatInteger(num));
         System.out.println(formatInteger(121));
+        System.out.println(formatDecimal(1.11));
 
     }
 
-
+    /**
+     * 转化整数
+     *
+     * @param num
+     * @return
+     */
     public static String formatInteger(int num) {
         char[] val = String.valueOf(num).toCharArray();
         int len = val.length;
@@ -49,7 +51,13 @@ public class NumberConvert {
     }
 
 
-    private static String formatDecimal(double decimal) {
+    /**
+     * 转化小数
+     *
+     * @param decimal
+     * @return
+     */
+    public static String formatDecimal(double decimal) {
         String decimals = String.valueOf(decimal);
         int decIndex = decimals.indexOf(".");
         int integ = Integer.valueOf(decimals.substring(0, decIndex));
@@ -69,7 +77,6 @@ public class NumberConvert {
         }
         return sb.toString();
     }
-
 
 
 }
