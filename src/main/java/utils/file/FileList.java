@@ -2,12 +2,18 @@ package utils.file;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * 获取路径下的全部文件
  */
 public class FileList {
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.asList(getFilePathList("D:\\temptask\\origin\\设计数据\\养护设计数据（一）\\2017\\2017年泰赣")));
+    }
+
     /**
      * 传入路径，返回该路径下的所有文件的路径
      *
@@ -16,6 +22,9 @@ public class FileList {
      */
     public static String[] getFilePathList(String directoryPath) {
         File[] files = new File(directoryPath).listFiles();
+        if(files ==null){
+            return new String[]{};
+        }
         String[] filesPath = new String[files.length];
         for (int i = 0; i < files.length; i++) {
             filesPath[i] = files[i].getAbsolutePath();

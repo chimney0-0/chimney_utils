@@ -12,9 +12,9 @@ import java.io.*;
 import java.util.Iterator;
 
 public class ExcelSplit {
-    String rootPath = "D:\\data_test\\数据字典";
+    String rootPath = "D:\\data_test\\1";
 
-    String targetRootPath = "D:\\data_test\\数据字典csv";
+    String targetRootPath = "D:\\data_test\\1csv";
 
     public static void main(String[] args) throws IOException {
 //        new ExcelSplit().splitXls("D:\\temptask\\origin\\2008-2018检测数据\\0-整理数据\\检测数据-2010-2011.xls");
