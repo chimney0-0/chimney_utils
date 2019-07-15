@@ -57,18 +57,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.6.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.6.5</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.35</version>
@@ -130,7 +118,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.6</version>
+            <version>8.0.11</version>
         </dependency>
 
 
@@ -156,6 +144,12 @@
             <groupId>us.codecraft</groupId>
             <artifactId>webmagic-core</artifactId>
             <version>0.7.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>6.4.2</version>
         </dependency>
 
     </dependencies>

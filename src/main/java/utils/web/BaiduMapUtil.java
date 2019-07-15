@@ -1,7 +1,5 @@
 package utils.web;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -63,26 +61,5 @@ public class BaiduMapUtil {
         return "";
     }
 
-
-    public String poiQuery(String query, String tag, String latlng) {
-        try {
-            String url = "http://api.map.baidu.com/place/v2/search?query=" + query + "&tag=" + tag + "&scope=2&output=json&location="
-                    + latlng + "&radius=1000&ak=" + ak;
-            CloseableHttpClient httpclient = HttpClients.createDefault();
-            HttpGet httpGet = new HttpGet(url);
-            httpGet.setHeader("Connection", "close");
-            CloseableHttpResponse response = httpclient.execute(httpGet);
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.readTree(EntityUtils.toString(response.getEntity()));
-            response.close();
-            if (jsonNode.get("status").intValue() == 0) {
-                JsonNode jsonNode1 = jsonNode.get("results");
-                return jsonNode1.toString();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 
 }
